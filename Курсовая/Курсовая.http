@@ -1,0 +1,6 @@
+@Курсовая_HostAddress = http://localhost:5276
+
+GET {{Курсовая_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
