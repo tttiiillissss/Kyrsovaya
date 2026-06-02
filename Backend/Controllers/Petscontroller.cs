@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Курсовая.Data;
+using Курсовая.Helpers;
 using Курсовая.Models;
 
 namespace Курсовая.Controllers
@@ -10,54 +11,81 @@ namespace Курсовая.Controllers
     public class PetsController : ControllerBase
     {
         private readonly AppDbContext _db;
-
         public PetsController(AppDbContext db) => _db = db;
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var pets = await _db.Pets
-                .Include(p => p.Owner)
-                .ToListAsync();
+            if (!AuthHelper.IsAuthenticated(HttpContext))
+                return Unauthorized("Необходима авторизация.");
+
+            // Клиент видит только своих питомцев
+            if (AuthHelper.GetRole(HttpContext) == "client")
+            {
+                var userId = AuthHelper.GetUserId(HttpContext);
+                var owner = await _db.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+                if (owner == null) return Ok(new List<object>());
+
+                var myPets = await _db.Pets
+                    .Include(p => p.Owner)
+                    .Where(p => p.OwnerId == owner.Id)
+                    .ToListAsync();
+                return Ok(myPets);
+            }
+
+            var pets = await _db.Pets.Include(p => p.Owner).ToListAsync();
             return Ok(pets);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var pet = await _db.Pets
-                .Include(p => p.Owner)
-                .Include(p => p.Appointments)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            if (!AuthHelper.IsAuthenticated(HttpContext))
+                return Unauthorized("Необходима авторизация.");
+            var pet = await _db.Pets.Include(p => p.Owner).FirstOrDefaultAsync(p => p.Id == id);
             return pet is null ? NotFound() : Ok(pet);
         }
+
         [HttpGet("owner/{ownerId}")]
         public async Task<IActionResult> GetByOwner(int ownerId)
         {
-            var pets = await _db.Pets.Where(p => p.OwnerId == ownerId).ToListAsync();
-            return Ok(pets);
+            if (!AuthHelper.IsAuthenticated(HttpContext))
+                return Unauthorized("Необходима авторизация.");
+            var list = await _db.Pets.Where(p => p.OwnerId == ownerId).ToListAsync();
+            return Ok(list);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Pet pet)
         {
+            if (!AuthHelper.IsAdminOrDoctor(HttpContext))
+                return Forbid();
             _db.Pets.Add(pet);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = pet.Id }, pet);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Pet pet)
         {
+            if (!AuthHelper.IsAdminOrDoctor(HttpContext))
+                return Forbid();
             if (id != pet.Id) return BadRequest();
             _db.Entry(pet).State = EntityState.Modified;
             try { await _db.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _db.Pets.AnyAsync(p => p.Id == id)) return NotFound();
+                if (!_db.Pets.Any(p => p.Id == id)) return NotFound();
                 throw;
             }
             return NoContent();
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!AuthHelper.IsAdmin(HttpContext))
+                return Forbid();
             var pet = await _db.Pets.FindAsync(id);
             if (pet is null) return NotFound();
             _db.Pets.Remove(pet);

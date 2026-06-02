@@ -11,6 +11,9 @@ namespace Курсовая.Models
         [Column("id")]
         public int Id { get; set; }
 
+        [Column("user_id")]
+        public int? UserId { get; set; }
+
         [Required]
         [MaxLength(100)]
         [Column("fullname")]
