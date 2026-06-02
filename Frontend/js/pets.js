@@ -8,7 +8,7 @@ async function loadPets() {
         tab.innerHTML = `
             <div class="section-header">
                 <h2>Список питомцев</h2>
-                <button class="btn-add" onclick="addPet()">+ Добавить питомца</button>
+                ${canEdit() ? '<button class="btn-add" onclick="addPet()">+ Добавить питомца</button>' : ''}
             </div>
             <div class="empty-state">
                 <div class="empty-icon">🐾</div>
@@ -19,7 +19,7 @@ async function loadPets() {
     tab.innerHTML = `
         <div class="section-header">
             <h2>Всего: ${pets.length}</h2>
-            <button class="btn-add" onclick="addPet()">+ Добавить питомца</button>
+            ${canEdit() ? '<button class="btn-add" onclick="addPet()">+ Добавить питомца</button>' : ''}
         </div>
         <div class="table-wrap">
             <table>
@@ -32,7 +32,7 @@ async function loadPets() {
                         <th>Порода</th>
                         <th>Пол</th>
                         <th>Дата рождения</th>
-                        <th>Действия</th>
+                        ${canEdit() || canDelete() ? '<th>Действия</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -46,8 +46,8 @@ async function loadPets() {
                             <td>${p.gender || '—'}</td>
                             <td>${p.birthDate ? p.birthDate.split('T')[0] : '—'}</td>
                             <td>
-                                <button class="btn-edit" onclick="editPet(${p.id}, ${p.ownerId}, '${p.name}', '${p.animalType || ''}', '${p.breed || ''}', '${p.gender || ''}', '${p.birthDate ? p.birthDate.split('T')[0] : ''}')">✏️ Изменить</button>
-                                <button class="btn-delete" onclick="deletePet(${p.id})">🗑️ Удалить</button>
+                                ${canEdit() ? `<button class="btn-edit" onclick="editPet(${p.id}, ${p.ownerId}, '${p.name}', '${p.animalType || ''}', '${p.breed || ''}', '${p.gender || ''}', '${p.birthDate ? p.birthDate.split('T')[0] : ''}')">✏️ Изменить</button>` : ''}
+                                ${canDelete() ? `<button class="btn-delete" onclick="deletePet(${p.id})">🗑️ Удалить</button>` : ''}
                             </td>
                         </tr>
                     `).join('')}

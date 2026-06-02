@@ -8,7 +8,7 @@ async function loadAppointments() {
         tab.innerHTML = `
             <div class="section-header">
                 <h2>Список приёмов</h2>
-                <button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>
+                ${!isDoctor() ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
             </div>
             <div class="empty-state">
                 <div class="empty-icon">📅</div>
@@ -19,7 +19,7 @@ async function loadAppointments() {
     tab.innerHTML = `
         <div class="section-header">
             <h2>Всего: ${appointments.length}</h2>
-            <button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>
+            ${!isDoctor() ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
         </div>
         <div class="table-wrap">
             <table>
@@ -33,7 +33,7 @@ async function loadAppointments() {
                         <th>Услуга</th>
                         <th>Статус</th>
                         <th>Примечания</th>
-                        <th>Действия</th>
+                        ${canEdit() || canDelete() ? '<th>Действия</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -48,8 +48,8 @@ async function loadAppointments() {
                             <td>${getBadge(a.status)}</td>
                             <td>${a.notes || '—'}</td>
                             <td>
-                                <button class="btn-edit" onclick="editAppointment(${a.id}, ${a.petId}, ${a.doctorId}, ${a.serviceId}, '${a.appointmentDatetime}', '${a.status || ''}', '${a.notes || ''}')">✏️ Изменить</button>
-                                <button class="btn-delete" onclick="deleteAppointment(${a.id})">🗑️ Удалить</button>
+                                ${canEdit() ? `<button class="btn-edit" onclick="editAppointment(${a.id}, ${a.petId}, ${a.doctorId}, ${a.serviceId}, '${a.appointmentDatetime}', '${a.status || ''}', '${a.notes || ''}')">✏️ Изменить</button>` : ''}
+                                ${canDelete() ? `<button class="btn-delete" onclick="deleteAppointment(${a.id})">🗑️ Удалить</button>` : ''}
                             </td>
                         </tr>
                     `).join('')}

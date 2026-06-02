@@ -71,7 +71,16 @@ namespace Курсовая.Controllers
                 .Include(a => a.Doctor)
                 .Include(a => a.Service)
                 .FirstOrDefaultAsync(a => a.Id == id);
-            return appointment is null ? NotFound() : Ok(appointment);
+            if (appointment is null) return NotFound();
+            // Клиент видит только свои приёмы
+            if (AuthHelper.GetRole(HttpContext) == "client")
+            {
+                var userId = AuthHelper.GetUserId(HttpContext);
+                var owner = await _db.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+                if (owner == null || appointment.Pet?.OwnerId != owner.Id)
+                    return Forbid();
+            }
+            return Ok(appointment);
         }
 
         [HttpGet("doctor/{doctorId}")]
@@ -107,7 +116,16 @@ namespace Курсовая.Controllers
         {
             if (!AuthHelper.IsAuthenticated(HttpContext))
                 return Unauthorized("Необходима авторизация.");
-            // Все авторизованные могут создавать запись
+            // Клиент может создавать запись только для своего питомца
+            if (AuthHelper.GetRole(HttpContext) == "client")
+            {
+                var userId = AuthHelper.GetUserId(HttpContext);
+                var owner = await _db.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+                if (owner == null) return Forbid();
+                var pet = await _db.Pets.FindAsync(appointment.PetId);
+                if (pet == null || pet.OwnerId != owner.Id)
+                    return Forbid();
+            }
 
             _db.Appointments.Add(appointment);
             await _db.SaveChangesAsync();
