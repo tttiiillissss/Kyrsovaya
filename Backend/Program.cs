@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Курсовая;
 using Курсовая.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(8);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.None;  
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddCors(options =>
@@ -42,5 +45,7 @@ app.UseCors("AllowFrontend");
 app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
+
+await SeedData.InitializeAsync(app.Services);
 
 app.Run();
