@@ -35,6 +35,10 @@ namespace Курсовая.Models
         [JsonIgnore]
         public Owner Owner { get; set; } = null!;
 
+        [MaxLength(10)]
+        [Column("gender")]
+        public string? Gender { get; set; }
+
         [JsonIgnore]
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }

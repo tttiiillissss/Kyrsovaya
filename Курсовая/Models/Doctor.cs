@@ -23,6 +23,9 @@ namespace Курсовая.Models
         [MaxLength(20)]
         [Column("phone")]
         public string? Phone { get; set; }
+        
+        [Column("experience_years")]
+        public int? ExperienceYears { get; set; }
 
         [JsonIgnore]
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

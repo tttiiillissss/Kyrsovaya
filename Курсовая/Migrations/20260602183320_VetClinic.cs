@@ -19,7 +19,8 @@ namespace Курсовая.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     fullname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     specialization = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                    phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    experience_years = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,7 +68,8 @@ namespace Курсовая.Migrations
                     name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     animal_type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     breed = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    birth_date = table.Column<DateOnly>(type: "date", nullable: true)
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: true),
+                    gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {

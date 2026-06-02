@@ -77,6 +77,10 @@ namespace Курсовая.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ExperienceYears")
+                        .HasColumnType("int")
+                        .HasColumnName("experience_years");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -155,6 +159,11 @@ namespace Курсовая.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("breed");
+
+                    b.Property<string>("Gender")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("gender");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -12,7 +12,7 @@ using Курсовая.Data;
 namespace Курсовая.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260602181547_VetClinic")]
+    [Migration("20260602183320_VetClinic")]
     partial class VetClinic
     {
         /// <inheritdoc />
@@ -79,6 +79,10 @@ namespace Курсовая.Migrations
                         .HasColumnName("id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ExperienceYears")
+                        .HasColumnType("int")
+                        .HasColumnName("experience_years");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -158,6 +162,11 @@ namespace Курсовая.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("breed");
+
+                    b.Property<string>("Gender")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("gender");
 
                     b.Property<string>("Name")
                         .IsRequired()
