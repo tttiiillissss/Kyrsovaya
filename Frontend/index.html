@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лапа+ | Ветеринарная клиника</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="auth-screen">
+        <div class="auth-left">
+            <div class="auth-brand">
+                <div class="paw-icon">🐾</div>
+                <h1>Лапа<span>+</span></h1>
+                <p>Ветеринарная CRM система</p>
+            </div>
+            <div class="auth-features">
+                <div class="feature">✅ Учёт владельцев и питомцев</div>
+                <div class="feature">✅ Запись на приём</div>
+                <div class="feature">✅ Управление врачами</div>
+                <div class="feature">✅ Контроль услуг</div>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-box">
+                <h2 id="auth-title">Добро пожаловать!</h2>
+                <p class="auth-subtitle" id="auth-subtitle">Войдите в свой аккаунт</p>
+
+                <div id="register-fields" style="display:none">
+                    <div class="input-group">
+                        <label>Полное имя</label>
+                        <input type="text" id="reg-name" placeholder="Иванов Иван Иванович">
+                    </div>
+                    <div class="input-group">
+                        <label>Роль</label>
+                        <select id="reg-role">
+                            <option value="client">👤 Клиент</option>
+                            <option value="doctor">👨‍⚕️ Врач</option>
+                            <option value="admin">⚙️ Администратор</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="auth-email" placeholder="example@mail.ru">
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button class="btn-auth" onclick="submitAuth()">
+                    <span id="auth-btn-text">Войти</span>
+                </button>
+
+                <p id="auth-error" class="error-msg"></p>
+
+                <div class="auth-divider"></div>
+
+                <p class="auth-toggle-text">
+                    <span id="auth-toggle-label">Нет аккаунта?</span>
+                    <a href="#" onclick="toggleAuth()" id="auth-toggle-link">Зарегистрироваться</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="main-screen" style="display:none">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="paw-icon-sm">🐾</span>
+                <span>Лапа+</span>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="avatar" id="user-avatar"></div>
+                <div>
+                    <div id="user-name" class="sidebar-username"></div>
+                    <div id="user-role-badge" class="sidebar-role"></div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="tab-btn active" onclick="showTab('owners')" id="btn-owners">
+                    <span class="tab-icon">👥</span> Владельцы
+                </button>
+                <button class="tab-btn" onclick="showTab('pets')" id="btn-pets">
+                    <span class="tab-icon">🐾</span> Питомцы
+                </button>
+                <button class="tab-btn" onclick="showTab('doctors')" id="btn-doctors">
+                    <span class="tab-icon">👨‍⚕️</span> Врачи
+                </button>
+                <button class="tab-btn" onclick="showTab('appointments')" id="btn-appointments">
+                    <span class="tab-icon">📅</span> Приёмы
+                </button>
+                <button class="tab-btn" onclick="showTab('services')" id="btn-services">
+                    <span class="tab-icon">🛠️</span> Услуги
+                </button>
+            </nav>
+
+            <button class="btn-logout" onclick="logout()">
+                🚪 Выйти
+            </button>
+        </aside>
+        <div class="content-area">
+            <div class="topbar">
+                <div id="page-title" class="page-title">Владельцы</div>
+                <div class="topbar-right">
+                    <span class="clinic-badge">🏥 Ветклиника Лапа+</span>
+                </div>
+            </div>
+
+            <main>
+                <div id="tab-owners" class="tab-content"></div>
+                <div id="tab-pets" class="tab-content" style="display:none"></div>
+                <div id="tab-doctors" class="tab-content" style="display:none"></div>
+                <div id="tab-appointments" class="tab-content" style="display:none"></div>
+                <div id="tab-services" class="tab-content" style="display:none"></div>
+            </main>
+        </div>
+
+    </div>
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div id="modal-body"></div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+                <button class="btn-save" id="modal-save-btn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/owners.js"></script>
+    <script src="js/pets.js"></script>
+    <script src="js/doctors.js"></script>
+    <script src="js/appointments.js"></script>
+    <script src="js/services.js"></script>
+
+    <script>
+        const pageTitles = {
+            owners: '👥 Владельцы',
+            pets: '🐾 Питомцы',
+            doctors: '👨‍⚕️ Врачи',
+            appointments: '📅 Приёмы',
+            services: '🛠️ Услуги'
+        };
+        window.onload = async () => {
+            await checkAuth();
+            const savedTab = localStorage.getItem('activeTab') || 'owners';
+            showTab(savedTab);
+        };
+        function showTab(name) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById('tab-' + name).style.display = 'block';
+            document.getElementById('btn-' + name).classList.add('active');
+            document.getElementById('page-title').textContent = pageTitles[name];
+
+            localStorage.setItem('activeTab', name);
+
+            if (name === 'owners') loadOwners();
+            if (name === 'pets') loadPets();
+            if (name === 'doctors') loadDoctors();
+            if (name === 'appointments') loadAppointments();
+            if (name === 'services') loadServices();
+        }
+        function openModal(title, bodyHtml, onSave) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = bodyHtml;
+            document.getElementById('modal-overlay').classList.add('active');
+            document.getElementById('modal-save-btn').onclick = onSave;
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>
