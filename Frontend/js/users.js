@@ -47,6 +47,7 @@ function openCreateUserModal() {
         const password = document.getElementById('cu-password').value.trim();
         const role     = document.getElementById('cu-role').value;
         if (!fullName || !email || !password) { alert('Заполните все поля.'); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Введите корректный email.'); return; }
         const res = await fetch(`${API}/api/auth/admin/create-user`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             credentials: 'include', body: JSON.stringify({ fullName, email, password, role })
@@ -54,6 +55,7 @@ function openCreateUserModal() {
         if (res.ok) { closeModal(); loadUsers(); }
         else alert('Ошибка: ' + await res.text());
     });
+    setTimeout(() => applyEmailMask('cu-email'), 0);
 }
 
 function openChangeRoleModal(userId, userName, currentRole) {
