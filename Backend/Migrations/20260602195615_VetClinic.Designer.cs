@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Курсовая.Data;
+using kyrsovaya.Data;
 
 #nullable disable
 
-namespace Курсовая.Migrations
+namespace kyrsovaya.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260602195615_VetClinic")]
@@ -25,7 +25,7 @@ namespace Курсовая.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Курсовая.Models.Appointment", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace Курсовая.Migrations
                     b.ToTable("appointments");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Doctor", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Doctor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +109,7 @@ namespace Курсовая.Migrations
                     b.ToTable("doctors");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Owner", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Owner", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +148,7 @@ namespace Курсовая.Migrations
                     b.ToTable("owners");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Pet", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Pet", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,7 +193,7 @@ namespace Курсовая.Migrations
                     b.ToTable("pets");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Service", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Service", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,7 +221,7 @@ namespace Курсовая.Migrations
                     b.ToTable("services");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.User", b =>
+            modelBuilder.Entity("kyrsovaya.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,21 +267,21 @@ namespace Курсовая.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Appointment", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Appointment", b =>
                 {
-                    b.HasOne("Курсовая.Models.Doctor", "Doctor")
+                    b.HasOne("kyrsovaya.Models.Doctor", "Doctor")
                         .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Курсовая.Models.Pet", "Pet")
+                    b.HasOne("kyrsovaya.Models.Pet", "Pet")
                         .WithMany("Appointments")
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Курсовая.Models.Service", "Service")
+                    b.HasOne("kyrsovaya.Models.Service", "Service")
                         .WithMany("Appointments")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -294,9 +294,9 @@ namespace Курсовая.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Pet", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Pet", b =>
                 {
-                    b.HasOne("Курсовая.Models.Owner", "Owner")
+                    b.HasOne("kyrsovaya.Models.Owner", "Owner")
                         .WithMany("Pets")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -305,22 +305,22 @@ namespace Курсовая.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Doctor", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Doctor", b =>
                 {
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Owner", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Owner", b =>
                 {
                     b.Navigation("Pets");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Pet", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Pet", b =>
                 {
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("Курсовая.Models.Service", b =>
+            modelBuilder.Entity("kyrsovaya.Models.Service", b =>
                 {
                     b.Navigation("Appointments");
                 });
@@ -328,3 +328,4 @@ namespace Курсовая.Migrations
         }
     }
 }
+

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Курсовая.Migrations
+namespace kyrsovaya.Migrations
 {
     /// <inheritdoc />
     public partial class VetClinic : Migration
@@ -182,3 +182,4 @@ namespace Курсовая.Migrations
         }
     }
 }
+

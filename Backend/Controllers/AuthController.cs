@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Курсовая.Data;
-using Курсовая.Helpers;
-using Курсовая.Models;
+using kyrsovaya.Data;
+using kyrsovaya.Helpers;
+using kyrsovaya.Models;
 
-namespace Курсовая.Controllers
+namespace kyrsovaya.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

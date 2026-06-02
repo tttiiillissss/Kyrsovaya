@@ -4,11 +4,11 @@
 // В Program.cs перед app.Run() добавьте:
 //   await SeedData.InitializeAsync(app.Services);
 // ============================================================
-using Курсовая.Data;
-using Курсовая.Models;
+using kyrsovaya.Data;
+using kyrsovaya.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Курсовая
+namespace kyrsovaya
 {
     public static class SeedData
     {
