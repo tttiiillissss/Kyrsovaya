@@ -9,7 +9,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection"),
+    sqlOptions => sqlOptions.EnableRetryOnFailure(
+        maxRetryCount: 10,
+        maxRetryDelay: TimeSpan.FromSeconds(5),
+        errorNumbersToAdd: null)));
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -45,6 +50,12 @@ app.UseCors("AllowFrontend");
 app.UseSession();
 app.UseAuthorization();
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<kyrsovaya.Data.AppDbContext>();
+    db.Database.Migrate();
+}
 
 await SeedData.InitializeAsync(app.Services);
 
