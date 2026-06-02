@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Курсовая.Models
+namespace kyrsovaya.Models
 {
     [Table("pets")]
     public class Pet

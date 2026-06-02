@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Курсовая.Models;
+using kyrsovaya.Models;
 
-namespace Курсовая.Data
+namespace kyrsovaya.Data
 {
     public class AppDbContext : DbContext
     {

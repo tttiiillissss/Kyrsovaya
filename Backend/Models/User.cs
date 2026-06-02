@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Курсовая.Models
+namespace kyrsovaya.Models
 {
     [Table("users")]
     public class User

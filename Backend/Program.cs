@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Курсовая;
-using Курсовая.Data;
+using kyrsovaya;
+using kyrsovaya.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

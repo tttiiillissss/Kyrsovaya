@@ -1,6 +1,6 @@
-@Курсовая_HostAddress = http://localhost:5276
+@kyrsovaya_HostAddress = http://localhost:5276
 
-GET {{Курсовая_HostAddress}}/weatherforecast/
+GET {{kyrsovaya_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

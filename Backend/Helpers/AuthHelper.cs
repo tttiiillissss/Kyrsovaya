@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Курсовая.Helpers
+namespace kyrsovaya.Helpers
 {
     public static class AuthHelper
     {
