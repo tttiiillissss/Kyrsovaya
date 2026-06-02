@@ -25,20 +25,14 @@
         <div class="auth-right">
             <div class="auth-box">
                 <h2 id="auth-title">Добро пожаловать!</h2>
-                <p class="auth-subtitle" id="auth-subtitle">Войдите в свой аккаунт</p>
+                <p class="auth-subtitle" id="reg-note" style="display:none;font-size:12px;color:#888;margin-top:-8px;">
+    Публичная регистрация доступна только как клиент.
+    Роль врача или администратора назначается администратором системы.</p>
 
                 <div id="register-fields" style="display:none">
                     <div class="input-group">
                         <label>Полное имя</label>
                         <input type="text" id="reg-name" placeholder="Иванов Иван Иванович">
-                    </div>
-                    <div class="input-group">
-                        <label>Роль</label>
-                        <select id="reg-role">
-                            <option value="client">👤 Клиент</option>
-                            <option value="doctor">👨‍⚕️ Врач</option>
-                            <option value="admin">⚙️ Администратор</option>
-                        </select>
                     </div>
                 </div>
 
@@ -88,15 +82,19 @@
                 <button class="tab-btn" onclick="showTab('pets')" id="btn-pets">
                     <span class="tab-icon">🐾</span> Питомцы
                 </button>
-                <button class="tab-btn" onclick="showTab('doctors')" id="btn-doctors">
-                    <span class="tab-icon">👨‍⚕️</span> Врачи
-                </button>
                 <button class="tab-btn" onclick="showTab('appointments')" id="btn-appointments">
                     <span class="tab-icon">📅</span> Приёмы
                 </button>
                 <button class="tab-btn" onclick="showTab('services')" id="btn-services">
                     <span class="tab-icon">🛠️</span> Услуги
                 </button>
+                <button class="tab-btn" onclick="showTab('doctors')" id="btn-doctors" data-hide-roles="client">
+    <span class="tab-icon">👨‍⚕️</span> Врачи
+</button>
+<button class="tab-btn" onclick="showTab('users')" id="btn-users" data-roles="admin">
+    <span class="tab-icon">🔑</span> Пользователи
+</button>
+                
             </nav>
 
             <button class="btn-logout" onclick="logout()">
@@ -117,6 +115,7 @@
                 <div id="tab-doctors" class="tab-content" style="display:none"></div>
                 <div id="tab-appointments" class="tab-content" style="display:none"></div>
                 <div id="tab-services" class="tab-content" style="display:none"></div>
+                <div id="tab-users" class="tab-content" style="display:none"></div>
             </main>
         </div>
 
@@ -148,7 +147,8 @@
             pets: '🐾 Питомцы',
             doctors: '👨‍⚕️ Врачи',
             appointments: '📅 Приёмы',
-            services: '🛠️ Услуги'
+            services: '🛠️ Услуги',
+            users: '🔑 Пользователи'
         };
         window.onload = async () => {
             await checkAuth();
@@ -170,6 +170,7 @@
             if (name === 'doctors') loadDoctors();
             if (name === 'appointments') loadAppointments();
             if (name === 'services') loadServices();
+            if (name === 'users') loadUsers();
         }
         function openModal(title, bodyHtml, onSave) {
             document.getElementById('modal-title').textContent = title;
@@ -181,6 +182,6 @@
             document.getElementById('modal-overlay').classList.remove('active');
         }
     </script>
-
+<script src="js/users.js"></script>
 </body>
 </html>
