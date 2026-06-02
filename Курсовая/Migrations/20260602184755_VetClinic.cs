@@ -59,6 +59,24 @@ namespace Курсовая.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    fullname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    password_hash = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    owner_id = table.Column<int>(type: "int", nullable: true),
+                    doctor_id = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_users", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "pets",
                 columns: table => new
                 {
@@ -144,6 +162,9 @@ namespace Курсовая.Migrations
         {
             migrationBuilder.DropTable(
                 name: "appointments");
+
+            migrationBuilder.DropTable(
+                name: "users");
 
             migrationBuilder.DropTable(
                 name: "doctors");

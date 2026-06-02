@@ -12,6 +12,7 @@ namespace Курсовая.Data
         public DbSet<Doctor> Doctors => Set<Doctor>();
         public DbSet<Service> Services => Set<Service>();
         public DbSet<Appointment> Appointments => Set<Appointment>();
+        public DbSet<User> Users => Set<User>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
