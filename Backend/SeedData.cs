@@ -1,10 +1,4 @@
-﻿// ============================================================
-// ФАЙЛ: SeedData.cs
-// Поместите в папку Backend/ (рядом с Program.cs)
-// В Program.cs перед app.Run() добавьте:
-//   await SeedData.InitializeAsync(app.Services);
-// ============================================================
-using kyrsovaya.Data;
+﻿using kyrsovaya.Data;
 using kyrsovaya.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +7,25 @@ namespace kyrsovaya
     public static class SeedData
     {
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
+        {
+            var retries = 10;
+            while (retries > 0)
+            {
+                try
+                {
+                    await SeedInternalAsync(serviceProvider);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    retries--;
+                    Console.WriteLine($"SeedData: повтор через 5 сек... ({retries} осталось). {ex.Message}");
+                    await Task.Delay(5000);
+                }
+            }
+        }
+
+        private static async Task SeedInternalAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -31,7 +44,6 @@ namespace kyrsovaya
             // --- ВРАЧИ ---
             if (!await db.Doctors.AnyAsync())
             {
-                // Привязываем врача-пользователя к записи в таблице doctors
                 var doctorUser = await db.Users.FirstAsync(u => u.Email == "doctor@lapaklinik.ru");
 
                 db.Doctors.AddRange(
@@ -65,7 +77,6 @@ namespace kyrsovaya
             // --- ВЛАДЕЛЬЦЫ ---
             if (!await db.Owners.AnyAsync())
             {
-                // Привязываем клиента-пользователя к записи в таблице owners
                 var clientUser = await db.Users.FirstAsync(u => u.Email == "client@lapaklinik.ru");
 
                 db.Owners.AddRange(
