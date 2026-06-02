@@ -12,7 +12,7 @@ using Курсовая.Data;
 namespace Курсовая.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260602183320_VetClinic")]
+    [Migration("20260602184242_VetClinic")]
     partial class VetClinic
     {
         /// <inheritdoc />
