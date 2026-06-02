@@ -1,4 +1,4 @@
-const API = 'https://localhost:7287';
+const API = 'http://localhost:8080';
 
 window.currentUser = null;
 
