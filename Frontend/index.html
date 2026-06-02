@@ -6,9 +6,12 @@
     <title>Лапа+ | Ветеринарная клиника</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 </head>
 <body>
-    <div id="auth-screen">
+
+    <!-- ===== ЭКРАН АВТОРИЗАЦИИ ===== -->
+    <div id="auth-screen" style="display:flex;min-height:100vh;">
         <div class="auth-left">
             <div class="auth-brand">
                 <div class="paw-icon">🐾</div>
@@ -25,10 +28,11 @@
         <div class="auth-right">
             <div class="auth-box">
                 <h2 id="auth-title">Добро пожаловать!</h2>
-                <p class="auth-subtitle" id="auth-subtitle" style="font-size:13px;color:#888;margin-top:-4px;margin-bottom:8px;">Войдите в свой аккаунт</p>
-                <p class="auth-subtitle" id="reg-note" style="display:none;font-size:12px;color:#888;margin-top:-8px;">
-    Публичная регистрация доступна только как клиент.
-    Роль врача или администратора назначается администратором системы.</p>
+                <p class="auth-subtitle" id="auth-subtitle">Войдите в свой аккаунт</p>
+                <p id="reg-note" style="display:none;font-size:12px;color:#888;">
+                    Публичная регистрация доступна только как клиент.
+                    Роль врача или администратора назначается администратором системы.
+                </p>
 
                 <div id="register-fields" style="display:none">
                     <div class="input-group">
@@ -61,66 +65,90 @@
             </div>
         </div>
     </div>
-    <div id="main-screen" style="display:none">
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <span class="paw-icon-sm">🐾</span>
-                <span>Лапа+</span>
-            </div>
 
-            <div class="sidebar-user">
-                <div class="avatar" id="user-avatar"></div>
-                <div>
-                    <div id="user-name" class="sidebar-username"></div>
-                    <div id="user-role-badge" class="sidebar-role"></div>
-                </div>
-            </div>
+    <!-- ===== ОСНОВНОЙ ЭКРАН ===== -->
+    <div id="main-screen" style="display:none;flex-direction:column;min-height:100vh;">
 
-            <nav class="sidebar-nav">
-                <button class="tab-btn active" onclick="showTab('owners')" id="btn-owners">
-                    <span class="tab-icon">👥</span> Владельцы
+        <!-- ТОПБАР -->
+        <header class="topbar">
+
+            <!-- Логотип -->
+            <a class="logo" href="#">
+                <div class="logo-box"><i class="ti ti-paw"></i></div>
+                <span class="logo-text">Лапа<span>+</span></span>
+            </a>
+
+            <div class="topbar-divider"></div>
+
+            <!-- Навигация -->
+            <nav class="topbar-nav">
+                <button class="tab-btn active" onclick="showTab('owners')" id="btn-owners" aria-label="Владельцы">
+                    <i class="ti ti-users"></i>
+                    <span class="tab-tooltip">Владельцы</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('pets')" id="btn-pets">
-                    <span class="tab-icon">🐾</span> Питомцы
+                <button class="tab-btn" onclick="showTab('pets')" id="btn-pets" aria-label="Питомцы">
+                    <i class="ti ti-paw"></i>
+                    <span class="tab-tooltip">Питомцы</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('appointments')" id="btn-appointments">
-                    <span class="tab-icon">📅</span> Приёмы
+                <button class="tab-btn" onclick="showTab('appointments')" id="btn-appointments" aria-label="Приёмы">
+                    <i class="ti ti-calendar"></i>
+                    <span class="tab-tooltip">Приёмы</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('services')" id="btn-services">
-                    <span class="tab-icon">🛠️</span> Услуги
+                <button class="tab-btn" onclick="showTab('services')" id="btn-services" aria-label="Услуги">
+                    <i class="ti ti-tools"></i>
+                    <span class="tab-tooltip">Услуги</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('doctors')" id="btn-doctors" data-hide-roles="client">
-    <span class="tab-icon">👨‍⚕️</span> Врачи
-</button>
-<button class="tab-btn" onclick="showTab('users')" id="btn-users" data-roles="admin">
-    <span class="tab-icon">🔑</span> Пользователи
-</button>
-                
+                <button class="tab-btn" onclick="showTab('doctors')" id="btn-doctors" data-hide-roles="client" aria-label="Врачи">
+                    <i class="ti ti-stethoscope"></i>
+                    <span class="tab-tooltip">Врачи</span>
+                </button>
+
+                <div class="nav-sep"></div>
+
+                <button class="tab-btn" onclick="showTab('users')" id="btn-users" data-roles="admin" aria-label="Пользователи">
+                    <i class="ti ti-shield-lock"></i>
+                    <span class="tab-tooltip">Пользователи</span>
+                </button>
             </nav>
 
-            <button class="btn-logout" onclick="logout()">
-                🚪 Выйти
-            </button>
-        </aside>
-        <div class="content-area">
-            <div class="topbar">
-                <div id="page-title" class="page-title">Владельцы</div>
-                <div class="topbar-right">
-                    <span class="clinic-badge">🏥 Ветклиника Лапа+</span>
-                </div>
+            <!-- Правая часть -->
+            <div class="topbar-right">
+                <span class="clinic-pill">🏥 Ветклиника Лапа+</span>
+                <button class="user-btn">
+                    <div class="user-avatar" id="user-avatar"></div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name"></div>
+                        <div class="user-role" id="user-role-badge"></div>
+                    </div>
+                </button>
+                <button class="tab-btn" onclick="logout()" aria-label="Выйти" style="color:#d96060;">
+                    <i class="ti ti-logout" style="color:#d96060;"></i>
+                    <span class="tab-tooltip">Выйти</span>
+                </button>
             </div>
 
-            <main>
-                <div id="tab-owners" class="tab-content"></div>
-                <div id="tab-pets" class="tab-content" style="display:none"></div>
-                <div id="tab-doctors" class="tab-content" style="display:none"></div>
-                <div id="tab-appointments" class="tab-content" style="display:none"></div>
-                <div id="tab-services" class="tab-content" style="display:none"></div>
-                <div id="tab-users" class="tab-content" style="display:none"></div>
-            </main>
+        </header>
+
+        <!-- ХЛЕБНЫЕ КРОШКИ -->
+        <div class="breadcrumb">
+            <span class="bc-home">Лапа+</span>
+            <span class="bc-sep">/</span>
+            <span class="bc-current" id="page-title">Владельцы</span>
         </div>
 
+        <!-- КОНТЕНТ -->
+        <main>
+            <div id="tab-owners"       class="tab-content"></div>
+            <div id="tab-pets"         class="tab-content" style="display:none"></div>
+            <div id="tab-doctors"      class="tab-content" style="display:none"></div>
+            <div id="tab-appointments" class="tab-content" style="display:none"></div>
+            <div id="tab-services"     class="tab-content" style="display:none"></div>
+            <div id="tab-users"        class="tab-content" style="display:none"></div>
+        </main>
+
     </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal" id="modal">
             <div class="modal-header">
@@ -135,6 +163,8 @@
         </div>
     </div>
 
+    <!-- ===== СКРИПТЫ ===== -->
+    <script src="js/masks.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/owners.js"></script>
     <script src="js/pets.js"></script>
@@ -145,18 +175,20 @@
 
     <script>
         const pageTitles = {
-            owners: '👥 Владельцы',
-            pets: '🐾 Питомцы',
-            doctors: '👨‍⚕️ Врачи',
-            appointments: '📅 Приёмы',
-            services: '🛠️ Услуги',
-            users: '🔑 Пользователи'
+            owners:       'Владельцы',
+            pets:         'Питомцы',
+            doctors:      'Врачи',
+            appointments: 'Приёмы',
+            services:     'Услуги',
+            users:        'Пользователи'
         };
+
         window.onload = async () => {
             await checkAuth();
             const savedTab = localStorage.getItem('activeTab') || 'owners';
             showTab(savedTab);
         };
+
         function showTab(name) {
             document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -167,23 +199,120 @@
 
             localStorage.setItem('activeTab', name);
 
-            if (name === 'owners') loadOwners();
-            if (name === 'pets') loadPets();
-            if (name === 'doctors') loadDoctors();
+            if (name === 'owners')       loadOwners();
+            if (name === 'pets')         loadPets();
+            if (name === 'doctors')      loadDoctors();
             if (name === 'appointments') loadAppointments();
-            if (name === 'services') loadServices();
-            if (name === 'users') loadUsers();
+            if (name === 'services')     loadServices();
+            if (name === 'users')        loadUsers();
         }
+
         function openModal(title, bodyHtml, onSave) {
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-body').innerHTML = bodyHtml;
             document.getElementById('modal-overlay').classList.add('active');
             document.getElementById('modal-save-btn').onclick = onSave;
         }
+
         function closeModal() {
             document.getElementById('modal-overlay').classList.remove('active');
         }
     </script>
+
+    <style>
+        #auth-screen { display: flex; min-height: 100vh; }
+
+        .auth-left {
+            width: 45%;
+            background: linear-gradient(160deg, #1B4332 0%, #2D6A4F 60%, #52B788 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .auth-left::before {
+            content: '🐾';
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.05;
+            bottom: -60px;
+            right: -40px;
+        }
+        .auth-brand .paw-icon { font-size: 3.5rem; margin-bottom: 12px; }
+        .auth-brand h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+        .auth-brand h1 span { color: #95D5B2; }
+        .auth-brand p { font-size: 1.1rem; opacity: 0.8; margin-top: 8px; margin-bottom: 48px; }
+        .auth-features { display: flex; flex-direction: column; gap: 14px; }
+        .feature {
+            font-size: 1rem; opacity: 0.9;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.08);
+            padding: 12px 20px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .auth-right {
+            width: 55%;
+            display: flex; justify-content: center; align-items: center;
+            background: #F8FAF9; padding: 40px;
+        }
+        .auth-box {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .auth-box h2 { font-size: 2rem; font-weight: 800; color: #1B4332; }
+        .auth-subtitle { color: #636E72; margin-top: -8px; margin-bottom: 8px; font-size: 13px; }
+
+        /* Переопределяем input-group внутри auth-box чтобы лейбл был над полем */
+        .auth-box .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .auth-box .input-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1B4332;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .auth-box .input-group input {
+            padding: 13px 16px;
+            border: 2px solid #ddeae3;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            outline: none;
+            transition: all 0.2s;
+            background: white;
+            color: #2D3436;
+            width: 100%;
+        }
+        .auth-box .input-group input:focus {
+            border-color: #52B788;
+            box-shadow: 0 0 0 4px rgba(82,183,136,0.15);
+        }
+
+        .btn-auth {
+            padding: 14px;
+            background: linear-gradient(135deg, #2D6A4F, #52B788);
+            color: white; border: none; border-radius: 12px;
+            font-size: 1.05rem; font-weight: 700; font-family: 'Nunito', sans-serif;
+            cursor: pointer; transition: all 0.2s; margin-top: 4px;
+            box-shadow: 0 4px 16px rgba(45,106,79,0.3);
+        }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,106,79,0.35); }
+        .auth-divider { height: 1px; background: #ddeae3; margin: 4px 0; }
+        .auth-toggle-text { text-align: center; color: #636E72; font-size: 0.95rem; }
+        .auth-toggle-text a { color: #2D6A4F; font-weight: 700; text-decoration: none; margin-left: 6px; }
+        .auth-toggle-text a:hover { color: #52B788; }
+    </style>
 
 </body>
 </html>

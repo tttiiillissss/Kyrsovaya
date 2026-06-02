@@ -21,6 +21,8 @@ function showAuthScreen() {
     window.currentUser = null;
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('main-screen').style.display = 'none';
+    // Применяем маску email после показа экрана
+    setTimeout(() => applyEmailMask('auth-email'), 0);
 }
 
 function showMainScreen(user) {
@@ -69,6 +71,9 @@ function toggleAuth() {
     document.getElementById('auth-error').textContent = '';
     const regNote = document.getElementById('reg-note');
     if (regNote) regNote.style.display = isLogin ? 'none' : 'block';
+
+    // Переприменяем маску при переключении — поле то же, но сбрасываем ошибку
+    setTimeout(() => applyEmailMask('auth-email'), 0);
 }
 
 async function submitAuth() {
@@ -76,8 +81,15 @@ async function submitAuth() {
     const password = document.getElementById('auth-password').value.trim();
     const errorEl  = document.getElementById('auth-error');
     errorEl.textContent = '';
+    errorEl.style.color = '';
 
     if (!email || !password) { errorEl.textContent = 'Заполните все поля.'; return; }
+
+    // Валидация формата email перед отправкой
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorEl.textContent = 'Введите корректный email, например: name@mail.ru';
+        return;
+    }
 
     if (isLogin) {
         const res = await fetch(`${API}/api/auth/login`, {
@@ -114,9 +126,14 @@ async function submitAuth() {
         }
     }
 }
+
 async function logout() {
     await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     localStorage.removeItem('activeTab');
     window.currentUser = null;
     showAuthScreen();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    applyEmailMask('auth-email');
+});

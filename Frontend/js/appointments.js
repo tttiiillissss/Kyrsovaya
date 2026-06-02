@@ -4,11 +4,16 @@ async function loadAppointments() {
     });
     const appointments = await res.json();
     const tab = document.getElementById('tab-appointments');
+
+    // Клиент и врач могут добавлять запись; только не admin-only
+    const showAddBtn = !isDoctor(); // admin и client видят кнопку
+    const showActions = isAdmin() || isDoctor();
+
     if (appointments.length === 0) {
         tab.innerHTML = `
             <div class="section-header">
                 <h2>Список приёмов</h2>
-                ${!isDoctor() ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
+                ${showAddBtn ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
             </div>
             <div class="empty-state">
                 <div class="empty-icon">📅</div>
@@ -19,7 +24,7 @@ async function loadAppointments() {
     tab.innerHTML = `
         <div class="section-header">
             <h2>Всего: ${appointments.length}</h2>
-            ${!isDoctor() ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
+            ${showAddBtn ? '<button class="btn-add" onclick="addAppointment()">+ Добавить приём</button>' : ''}
         </div>
         <div class="table-wrap">
             <table>
@@ -33,7 +38,7 @@ async function loadAppointments() {
                         <th>Услуга</th>
                         <th>Статус</th>
                         <th>Примечания</th>
-                        ${canEdit() || canDelete() ? '<th>Действия</th>' : ''}
+                        ${showActions ? '<th>Действия</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -47,10 +52,10 @@ async function loadAppointments() {
                             <td>${a.service ? a.service.name : '—'}</td>
                             <td>${getBadge(a.status)}</td>
                             <td>${a.notes || '—'}</td>
-                            <td>
-                                ${canEdit() ? `<button class="btn-edit" onclick="editAppointment(${a.id}, ${a.petId}, ${a.doctorId}, ${a.serviceId}, '${a.appointmentDatetime}', '${a.status || ''}', '${a.notes || ''}')">✏️ Изменить</button>` : ''}
-                                ${canDelete() ? `<button class="btn-delete" onclick="deleteAppointment(${a.id})">🗑️ Удалить</button>` : ''}
-                            </td>
+                            ${showActions ? `<td>
+                                ${isAdmin() || isDoctor() ? `<button class="btn-edit" onclick="editAppointment(${a.id}, ${a.petId}, ${a.doctorId}, ${a.serviceId}, '${a.appointmentDatetime}', '${a.status || ''}', '${a.notes || ''}')">✏️ Изменить</button>` : ''}
+                                ${isAdmin() ? `<button class="btn-delete" onclick="deleteAppointment(${a.id})">🗑️ Удалить</button>` : ''}
+                            </td>` : ''}
                         </tr>
                     `).join('')}
                 </tbody>
@@ -87,6 +92,18 @@ async function getSelectOptions() {
 async function addAppointment() {
     const { pets, doctors, services } = await getSelectOptions();
 
+    // Клиент записывает себя: статус всегда "scheduled", фиксируется автоматически
+    const statusField = isClient()
+        ? '' // клиент не выбирает статус
+        : `<div class="input-group">
+            <label>Статус</label>
+            <select id="m-status">
+                <option value="scheduled">📅 Запланирован</option>
+                <option value="completed">✅ Завершён</option>
+                <option value="cancelled">❌ Отменён</option>
+            </select>
+        </div>`;
+
     openModal('Добавить приём', `
         <div class="input-group">
             <label>Питомец</label>
@@ -110,25 +127,19 @@ async function addAppointment() {
             <label>Дата и время</label>
             <input type="datetime-local" id="m-datetime">
         </div>
-        <div class="input-group">
-            <label>Статус</label>
-            <select id="m-status">
-                <option value="scheduled">📅 Запланирован</option>
-                <option value="completed">✅ Завершён</option>
-                <option value="cancelled">❌ Отменён</option>
-            </select>
-        </div>
+        ${statusField}
         <div class="input-group">
             <label>Примечания</label>
             <input type="text" id="m-notes" placeholder="Комментарий...">
         </div>
     `, async () => {
+        const statusEl = document.getElementById('m-status');
         const body = {
             petId:                parseInt(document.getElementById('m-petid').value),
             doctorId:             parseInt(document.getElementById('m-doctorid').value),
             serviceId:            parseInt(document.getElementById('m-serviceid').value),
             appointmentDatetime:  document.getElementById('m-datetime').value,
-            status:               document.getElementById('m-status').value,
+            status:               statusEl ? statusEl.value : 'scheduled',
             notes:                document.getElementById('m-notes').value
         };
         await fetch(`${API}/api/appointments`, {

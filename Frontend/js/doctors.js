@@ -8,7 +8,7 @@ async function loadDoctors() {
         tab.innerHTML = `
             <div class="section-header">
                 <h2>Список врачей</h2>
-                <button class="btn-add" onclick="addDoctor()">+ Добавить врача</button>
+                ${isAdmin() ? '<button class="btn-add" onclick="addDoctor()">+ Добавить врача</button>' : ''}
             </div>
             <div class="empty-state">
                 <div class="empty-icon">👨‍⚕️</div>
@@ -19,7 +19,7 @@ async function loadDoctors() {
     tab.innerHTML = `
         <div class="section-header">
             <h2>Всего: ${doctors.length}</h2>
-            <button class="btn-add" onclick="addDoctor()">+ Добавить врача</button>
+            ${isAdmin() ? '<button class="btn-add" onclick="addDoctor()">+ Добавить врача</button>' : ''}
         </div>
         <div class="table-wrap">
             <table>
@@ -30,7 +30,7 @@ async function loadDoctors() {
                         <th>Специализация</th>
                         <th>Стаж (лет)</th>
                         <th>Телефон</th>
-                        <th>Действия</th>
+                        ${isAdmin() ? '<th>Действия</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -41,16 +41,17 @@ async function loadDoctors() {
                             <td>${d.specialization || '—'}</td>
                             <td>${d.experienceYears ?? '—'}</td>
                             <td>${d.phone || '—'}</td>
-                            <td>
+                            ${isAdmin() ? `<td>
                                 <button class="btn-edit" onclick="editDoctor(${d.id}, '${d.fullName}', '${d.specialization || ''}', ${d.experienceYears ?? 0}, '${d.phone || ''}')">✏️ Изменить</button>
                                 <button class="btn-delete" onclick="deleteDoctor(${d.id})">🗑️ Удалить</button>
-                            </td>
+                            </td>` : ''}
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
         </div>`;
 }
+
 function addDoctor() {
     openModal('Добавить врача', `
         <div class="input-group">
@@ -67,7 +68,7 @@ function addDoctor() {
         </div>
         <div class="input-group">
             <label>Телефон</label>
-            <input type="text" id="m-phone" placeholder="+7 900 000 00 00">
+            <input type="text" id="m-phone" placeholder="+7 (___) ___-__-__">
         </div>
     `, async () => {
         const body = {
@@ -85,7 +86,10 @@ function addDoctor() {
         closeModal();
         loadDoctors();
     });
+
+    setTimeout(() => applyPhoneMask('m-phone'), 0);
 }
+
 function editDoctor(id, fullName, specialization, experienceYears, phone) {
     openModal('Изменить врача', `
         <div class="input-group">
@@ -121,7 +125,10 @@ function editDoctor(id, fullName, specialization, experienceYears, phone) {
         closeModal();
         loadDoctors();
     });
+
+    setTimeout(() => applyPhoneMask('m-phone'), 0);
 }
+
 async function deleteDoctor(id) {
     if (!confirm('Удалить врача?')) return;
     await fetch(`${API}/api/doctors/${id}`, {

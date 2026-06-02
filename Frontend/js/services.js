@@ -8,7 +8,7 @@ async function loadServices() {
         tab.innerHTML = `
             <div class="section-header">
                 <h2>Список услуг</h2>
-                <button class="btn-add" onclick="addService()">+ Добавить услугу</button>
+                ${isAdmin() ? '<button class="btn-add" onclick="addService()">+ Добавить услугу</button>' : ''}
             </div>
             <div class="empty-state">
                 <div class="empty-icon">🛠️</div>
@@ -19,7 +19,7 @@ async function loadServices() {
     tab.innerHTML = `
         <div class="section-header">
             <h2>Всего: ${services.length}</h2>
-            <button class="btn-add" onclick="addService()">+ Добавить услугу</button>
+            ${isAdmin() ? '<button class="btn-add" onclick="addService()">+ Добавить услугу</button>' : ''}
         </div>
         <div class="table-wrap">
             <table>
@@ -30,7 +30,7 @@ async function loadServices() {
                         <th>Описание</th>
                         <th>Стоимость</th>
                         <th>Длительность</th>
-                        <th>Действия</th>
+                        ${isAdmin() ? '<th>Действия</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
@@ -41,10 +41,10 @@ async function loadServices() {
                             <td>${s.description || '—'}</td>
                             <td>${s.price ? s.price + ' ₽' : '—'}</td>
                             <td>${s.durationMinutes ? s.durationMinutes + ' мин.' : '—'}</td>
-                            <td>
+                            ${isAdmin() ? `<td>
                                 <button class="btn-edit" onclick="editService(${s.id}, '${s.name}', '${s.description || ''}', ${s.price || 0}, ${s.durationMinutes || 0})">✏️ Изменить</button>
                                 <button class="btn-delete" onclick="deleteService(${s.id})">🗑️ Удалить</button>
-                            </td>
+                            </td>` : ''}
                         </tr>
                     `).join('')}
                 </tbody>
